@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>戯言ジェネレーター</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #ffe6f0; /* 薄ピンク色 */
+        }
+        #firstPart, #secondPart {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            display: inline-block;
+            margin: 0 10px;
+        }
+        #middleInput {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+            margin: 20px 0;
+        }
+        #speakBtn, #resetBtn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #87ceeb; /* 水色 */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        #speakBtn:hover, #resetBtn:hover {
+            background-color: #70b8d3; /* ホバー時の少し濃い水色 */
+        }
+        #output {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>戯言ジェネレーター</h1>
+    <div>
+        <span id="firstPart"></span>
+        <input type="text" id="middleInput" placeholder="中間の言葉を入力してね！" />
+        <span id="secondPart"></span>
+    </div>
+    <button id="speakBtn">聞いてみよう！</button>
+    <button id="resetBtn" onclick="location.reload()">単語を選び直す</button>
+    <div id="output"></div>
+
+    <script>
+        // 前半の言葉リスト
+        const firstParts = [
+            "するめいか", "やばい梅干し", "銀河のっぺり", "めこちゃん", "宇宙カピバラ",
+            "謎の納豆", "ふわふわパンダ", "踊るタコ", "眠そうな月", "キラキラ星人",
+            "浮遊する豆腐", "逆さまの虹", "しゃべるサボテン", "時空のスプーン", "夢見るゴミ箱",
+            "透明なカエル", "空飛ぶたこ焼き", "回転するプリン", "光る海藻", "ふわふわの石",
+            "濡れた靴下の王様", "記憶喪失のトースター", "目玉焼きの幽霊", "無重力バナナ",
+            "カタツムリのディスコ", "しゃがむ雲", "溶けた時計の涙", "オレンジ色のささやき",
+            "歩く冷蔵庫", "逆再生の金魚", "しゃべるサンダル", "溶けたピザ", "浮かぶ電球",
+            "歌うカーテン", "跳ねるみかん", "光る靴ひも", "逆走するカタツムリ", "ふわふわのハンガー",
+            "泣き虫な冷蔵庫", "踊るシャンプー", "透明なハムスター", "回転する傘", "宇宙のマシュマロ",
+            "ねばねばスープ", "夢見る電池", "しゃがむ星", "キラキラのゴミ袋", "のびるサボテン",
+            "ふにゃふにゃのロボット", "泡立つカーペット", "逆さまのトマト", "泳ぐ枕",
+            "笑う電線", "とろけるキャンディ", "ぐるぐるメガネ", "ぷよぷよの壁", "眠るハエ",
+            "走るスニーカー", "飛び跳ねる豆", "謎のゼリー", "しゃぶしゃぶ月", "とろけるカサ",
+            "逆さまのネオン", "歌うスプーン", "泳ぐ冷蔵庫", "笑う壁紙", "ふわふわのゴミ",
+            "ぐにゃぐにゃ雲", "透明な靴下", "回転する猫", "光るバケツ", "踊る電柱",
+            "ねばねば星", "しゃべるトマト", "溶けた電話", "宇宙の毛玉", "逆走する石",
+            "夢見る傘", "泡立つ机", "キラキラの虫", "ふにゃふにゃ川", "歩くシャツ",
+            "泣く電車", "飛び跳ねる窓", "眠るサラダ", "ぐるぐるの木", "とろとろの犬",
+            "逆再生の鳥", "光るパン", "泳ぐカバン", "しゃがむ太陽", "ねじれた靴",
+            "ふわふわの壁", "歌うカエル", "笑う時計", "踊る電池", "キラキラの川",
+            "溶ける帽子", "逆さまの机", "しゃべる風", "光るゴミ箱", "ふにゃふにゃ魚",
+            "泳ぐ木", "泣くカーテン", "ぐるぐる雲", "とろける星", "逆走する風呂",
+            "夢見る犬", "泡立つ靴", "キラキラの木", "ぬちょすけさん", "ジューシージョン", "ウザいゾンビ"
+        ];
+
+        // 後半の言葉リスト
+        const secondParts = [
+            "分裂した", "ぐにゃっとした", "宇宙に届いた", "泡になった", "逆さまに飛んだ",
+            "ねじれた", "キラキラ崩れた", "突然泣いた", "無限に伸びた", "ぷるぷる震えた",
+            "咲いた", "宿った", "踊った", "飛び跳ねた", "輝いた", "笑った", "歌った",
+            "走った", "転がった", "浮かんだ", "消えた", "叫んだ", "溶けた", "爆発した",
+            "凍った", "変身した", "眠った", "鳴いた", "ねっちょりした", "好きちゅっちゅ",
+            "地球を丸呑みした", "風に溶け込んだ", "影と握手した", "未来に手紙を書いた", "ゼリーに変身した",
+            "波に飲み込まれた", "鏡の中で寝た", "砂漠でスキーした", "木に話しかけた", "空に落書きした",
+            "氷の上で踊った", "幽霊とチェスした", "風船と旅に出た", "影を追い越した", "水たまりで泳いだ",
+            "雲を食べた", "時間を逆さまにした", "石とデートした", "暗闇で光った", "道に迷った星になった",
+            "雨と会話した", "山とハイタッチした", "夜空を折り畳んだ", "花に歌を教えた", "風に背泳ぎした",
+            "壁にささやいた", "泡と友達になった", "光を飲み込んだ", "夢に飛び込んだ", "音と握手した",
+            "空に溶けた", "月とキスした", "海に飛び散った", "風に変身した", "雲と結婚した",
+            "星に抱きついた", "影に隠れた", "光と喧嘩した", "夢に溶け込んだ", "時間を飲み込んだ",
+            "泡に閉じ込めた", "宇宙で昼寝した", "夜に飛び乗った", "石に囁いた", "水に変形した",
+            "空に浮かべた", "風に笑った", "雲に登った", "星と交換した", "影に逃げ込んだ",
+            "光に飛び込んだ", "夢に捕まった", "時間を折り畳んだ", "泡に包まれた", "宇宙に浮遊した",
+            "夜と握手した", "石に変身した", "水に漂った", "空に叫んだ", "風に転がった",
+            "雲に突っ込んだ", "星に触れた", "影に飲み込まれた", "光に溶け込んだ", "夢に飛んだ",
+            "時間を逆走した", "泡に埋まった", "宇宙に歌った", "夜に踊った", "石と友達になった",
+            "水に笑った", "空に沈んだ", "風に飛ばされた", "雲に抱かれた", "星に囁いた",
+            "影に変形した", "光に捕まった", "夢に漂った", "時間を抱きしめた", "泡に浮かんだ"
+        ];
+
+        // ランダムに言葉を選ぶ関数
+        function getRandomWord(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        // ページ読み込み時に前半と後半をランダムに表示
+        window.onload = () => {
+            document.getElementById('firstPart').textContent = getRandomWord(firstParts);
+            document.getElementById('secondPart').textContent = getRandomWord(secondParts);
+        };
+
+        // 文を生成して読み上げる関数
+        function generateAndSpeak() {
+            const first = document.getElementById('firstPart').textContent;
+            const middle = document.getElementById('middleInput').value.trim();
+            const second = document.getElementById('secondPart').textContent;
+
+            if (!middle) {
+                alert("中間の言葉を入力してください。");
+                return;
+            }
+
+            const phrase = `${first}${middle}${second}`;
+            document.getElementById('output').textContent = phrase;
+
+            const utterance = new SpeechSynthesisUtterance(phrase);
+            utterance.lang = 'ja-JP'; // 日本語で読み上げる
+            speechSynthesis.speak(utterance);
+        }
+
+        // ボタンクリック時の処理
+        document.getElementById('speakBtn').addEventListener('click', generateAndSpeak);
+    </script>
+</body>
+</html>

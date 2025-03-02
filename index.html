@@ -24,7 +24,7 @@
             width: 200px;
             margin: 20px 0;
         }
-        #speakBtn, #resetBtn {
+        #speakBtn, #resetBtn, #howToBtn {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
@@ -34,7 +34,7 @@
             border-radius: 5px;
             margin: 10px;
         }
-        #speakBtn:hover, #resetBtn:hover {
+        #speakBtn:hover, #resetBtn:hover, #howToBtn:hover {
             background-color: #70b8d3; /* ホバー時の少し濃い水色 */
         }
         #output {
@@ -54,6 +54,7 @@
     </div>
     <button id="speakBtn">聞いてみよう！</button>
     <button id="resetBtn" onclick="location.reload()">単語を選び直す</button>
+    <button id="howToBtn">使い方</button>
     <div id="output"></div>
 
     <script>
@@ -139,8 +140,22 @@
             speechSynthesis.speak(utterance);
         }
 
+        // 使い方を表示する関数
+        function showHowTo() {
+            const howToText = `
+                【使い方】
+                1. ページが表示されると、前半と後半の言葉がランダムに選ばれます。
+                2. 中央の入力欄に好きな言葉を入力してください。
+                3. 「聞いてみよう！」ボタンを押すと、完成した戯言が読み上げられ、下に表示されます。
+                4. 「単語を選び直す」ボタンで、前半と後半の言葉を新しく選び直せます。
+                5. 楽しんでね！
+            `;
+            alert(howToText.trim());
+        }
+
         // ボタンクリック時の処理
         document.getElementById('speakBtn').addEventListener('click', generateAndSpeak);
+        document.getElementById('howToBtn').addEventListener('click', showHowTo);
     </script>
 </body>
 </html>
